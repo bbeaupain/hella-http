@@ -9,36 +9,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 @RequiredArgsConstructor
 public class RequestDecoder {
     private static final int AVERAGE_PATH_LENGTH_HINT = 256;
-    private State parserState = State.REQUEST_LINE;
+    private State state = State.REQUEST_LINE;
     private int contentLength = 0;
 
-    public Request accept(ByteBuffer buffer) {
+    public Request decode(ByteBuffer buffer) {
         Request.RequestBuilder requestBuilder = Request.builder();
         try {
-            buffer.flip();
             loop: while (buffer.hasRemaining()) {
-                switch (parserState) {
+                switch (state) {
                     case REQUEST_LINE -> {
                         buffer.mark();
                         decodeMethod(buffer, requestBuilder);
                         decodePath(buffer, requestBuilder);
                         decodeProtocol(buffer, requestBuilder);
-                        parserState = State.HEADERS;
+                        state = State.HEADERS;
                     }
                     case HEADERS -> {
                         buffer.mark();
                         decodeHeaders(buffer, requestBuilder);
-                        parserState = State.BODY;
+                        state = State.BODY;
                     }
                     case BODY -> {
                         if (buffer.remaining() >= contentLength) {
+                            buffer.position(buffer.position() + contentLength);
                             requestBuilder.body(buffer.slice());
-                            parserState = State.DONE;
+                            state = State.REQUEST_LINE;
                             break loop;
                         }
                     }
@@ -168,17 +167,16 @@ public class RequestDecoder {
         REQUEST_LINE,
         HEADERS,
         BODY,
-        DONE
     }
 
     private enum PathState {
         PATH,
         PARAM_KEY,
-        PARAM_VAL
+        PARAM_VAL,
     }
 
     private enum HeaderState {
         HEADER_KEY,
-        HEADER_VAL
+        HEADER_VAL,
     }
 }

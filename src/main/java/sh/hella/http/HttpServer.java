@@ -8,7 +8,6 @@ import sh.hella.http.codec.ResponseEncoder;
 
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
-import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -40,34 +39,31 @@ public class HttpServer {
 
     public HttpServer start() {
         var serverSocket = new IoUringServerSocket(options.getHost(), options.getPort());
+        var responseEncoder = new ResponseEncoder();
         serverSocket.onAccept((ring, socket) -> {
             ring.queueAccept(serverSocket);
-            var requestDecoder = new RequestDecoder();
-            var responseEncoder = new ResponseEncoder();
             var inBuffer = ByteBuffer.allocateDirect(options.getRequestBufferSize());
             var outBuffer = ByteBuffer.allocateDirect(options.getResponseBufferSize());
+            var requestDecoder = new RequestDecoder();
+            socket.onWrite(ByteBuffer::compact);
             socket.onRead(received -> {
-                socket.onWrite(sent -> socket.close());
                 try {
-                    var request = requestDecoder.accept(received);
-                    if (request.getMethod() == null) {
-                        throw new RuntimeException("Unable to decode HTTP request: " + request);
-                    }
+                    received.flip();
+                    var request = requestDecoder.decode(received);
                     var response = handler.handle(request);
                     responseEncoder.encode(response, outBuffer);
+                    received.compact();
                     ring.queueWrite(socket, outBuffer);
+                    ring.queueRead(socket, received);
                 } catch (BufferUnderflowException ex) {
+                    received.compact();
                     ring.queueRead(socket, received);
                 }
-            }).onException(ex -> {
-                ex.printStackTrace();
-                socket.close();
             });
             ring.queueRead(socket, inBuffer);
         });
         for (int i = 0; i < threads; i++) {
             var ring = new IoUring()
-                .onException(Exception::printStackTrace)
                 .queueAccept(serverSocket);
             pool.execute(ring::loop);
         }
