@@ -10,7 +10,6 @@ import java.util.Map;
 @Builder
 public class Response {
     private final int status;
-    private final String reason;
     @Singular private final Map<String, String> headers;
     private final byte[] body;
 }
