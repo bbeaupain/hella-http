@@ -33,6 +33,18 @@ public class RequestParserTest {
     }
 
     @Test
+    public void shouldParseMultipleHeaders() {
+        ByteBuffer buffer = ByteBufferUtil.wrapDirect("GET /test HTTP/1.1\r\nContent-Length: 0\r\nKeep-Alive: timeout=5, max=1000\r\n\r\n");
+        RequestDecoder decoder = new RequestDecoder();
+        Request request = decoder.decode(buffer);
+        Assertions.assertEquals("GET", request.getMethod());
+        Assertions.assertEquals("HTTP/1.1", request.getProtocol());
+        Assertions.assertEquals("/test", request.getPath());
+        Assertions.assertEquals("0", request.getHeaders().get("Content-Length"));
+        Assertions.assertEquals("timeout=5, max=1000", request.getHeaders().get("Keep-Alive"));
+    }
+
+    @Test
     public void shouldParseParameters() {
         ByteBuffer buffer = ByteBufferUtil.wrapDirect("GET /test?foo=bar HTTP/1.1\r\n\r\n");
         RequestDecoder decoder = new RequestDecoder();
@@ -41,6 +53,18 @@ public class RequestParserTest {
         Assertions.assertEquals("HTTP/1.1", request.getProtocol());
         Assertions.assertEquals("/test", request.getPath());
         Assertions.assertEquals("bar", request.getParameters().get("foo").get(0));
+    }
+
+    @Test
+    public void shouldParseMultipleParameters() {
+        ByteBuffer buffer = ByteBufferUtil.wrapDirect("GET /test?foo=bar&test=true HTTP/1.1\r\n\r\n");
+        RequestDecoder decoder = new RequestDecoder();
+        Request request = decoder.decode(buffer);
+        Assertions.assertEquals("GET", request.getMethod());
+        Assertions.assertEquals("HTTP/1.1", request.getProtocol());
+        Assertions.assertEquals("/test", request.getPath());
+        Assertions.assertEquals("bar", request.getParameters().get("foo").get(0));
+        Assertions.assertEquals("true", request.getParameters().get("test").get(0));
     }
 
     @Test

@@ -151,7 +151,10 @@ public class RequestDecoder {
                         headers.put(headerKeyBuilder.toString(), headerValBuilder.toString());
                         headerKeyBuilder = new StringBuilder();
                         headerState = HeaderState.HEADER_KEY;
-                    } else if (val != ' ' && val != '\r') {
+                    } else if (val != '\r') {
+                        if (val == ' ' && headerValBuilder.length() == 0) {
+                            continue; // skip first whitespace
+                        }
                         headerValBuilder.append((char) val);
                     }
                 }
