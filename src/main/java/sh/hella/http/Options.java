@@ -8,8 +8,9 @@ import java.time.Duration;
 @Data
 @Builder
 public class Options {
-    private final String host;
-    private final int port;
-    private final int requestBufferSize;
-    private final int responseBufferSize;
+    @Builder.Default private final String host = "0.0.0.0";
+    @Builder.Default private final int port = 8080;
+    @Builder.Default private final int requestBufferSize = 64 * 1024;
+    @Builder.Default private final int responseBufferSize = 64 * 1024;
+    @Builder.Default private final int threads = Runtime.getRuntime().availableProcessors();
 }
