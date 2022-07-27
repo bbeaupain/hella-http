@@ -2,6 +2,7 @@ package sh.hella.http;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import sh.blake.niouring.util.ByteBufferUtil;
 import sh.hella.http.codec.RequestDecoder;
 
 import java.nio.BufferUnderflowException;
@@ -12,7 +13,7 @@ public class RequestParserTest {
 
     @Test
     public void shouldParseSimpleRequestLine() {
-        ByteBuffer buffer = wrap("GET /test HTTP/1.1\r\n\r\n");
+        ByteBuffer buffer = ByteBufferUtil.wrapDirect("GET /test HTTP/1.1\r\n\r\n");
         RequestDecoder parser = new RequestDecoder();
         Request request = parser.decode(buffer);
         Assertions.assertEquals("GET", request.getMethod());
@@ -22,7 +23,7 @@ public class RequestParserTest {
 
     @Test
     public void shouldParseHeaders() {
-        ByteBuffer buffer = wrap("GET /test HTTP/1.1\r\nContent-Length: 0\r\n\r\n");
+        ByteBuffer buffer = ByteBufferUtil.wrapDirect("GET /test HTTP/1.1\r\nContent-Length: 0\r\n\r\n");
         RequestDecoder parser = new RequestDecoder();
         Request request = parser.decode(buffer);
         Assertions.assertEquals("GET", request.getMethod());
@@ -33,7 +34,7 @@ public class RequestParserTest {
 
     @Test
     public void shouldParseParameters() {
-        ByteBuffer buffer = wrap("GET /test?foo=bar HTTP/1.1\r\n\r\n");
+        ByteBuffer buffer = ByteBufferUtil.wrapDirect("GET /test?foo=bar HTTP/1.1\r\n\r\n");
         RequestDecoder parser = new RequestDecoder();
         Request request = parser.decode(buffer);
         Assertions.assertEquals("GET", request.getMethod());
@@ -44,9 +45,10 @@ public class RequestParserTest {
 
     @Test
     public void shouldParseBody() {
-        ByteBuffer buffer = wrap("POST /test?foo=bar HTTP/1.1\r\nContent-Length: 12\r\n\r\nHello, world!");
+        ByteBuffer buffer = ByteBufferUtil.wrapDirect("POST /test?foo=bar HTTP/1.1\r\nContent-Length: 12\r\n\r\nHello, world!");
         RequestDecoder parser = new RequestDecoder();
         Request request = parser.decode(buffer);
+        System.out.println(request);
         Assertions.assertEquals("POST", request.getMethod());
         Assertions.assertEquals("HTTP/1.1", request.getProtocol());
         Assertions.assertEquals("/test", request.getPath());
@@ -56,13 +58,8 @@ public class RequestParserTest {
 
     @Test
     public void shouldNotParseMalformedRequestLine() {
-        ByteBuffer buffer = wrap("GET HTTP/1.1");
+        ByteBuffer buffer = ByteBufferUtil.wrapDirect("GET HTTP/1.1");
         RequestDecoder parser = new RequestDecoder();
         Assertions.assertThrows(BufferUnderflowException.class, () -> parser.decode(buffer));
-    }
-
-    private ByteBuffer wrap(String utf8) {
-        byte[] data = utf8.getBytes(StandardCharsets.UTF_8);
-        return ByteBuffer.allocateDirect(data.length).put(data);
     }
 }

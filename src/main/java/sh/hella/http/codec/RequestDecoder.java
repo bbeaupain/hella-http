@@ -34,12 +34,14 @@ public class RequestDecoder {
                         state = State.BODY;
                     }
                     case BODY -> {
-                        if (buffer.remaining() >= contentLength) {
-                            buffer.position(buffer.position() + contentLength);
-                            requestBuilder.body(buffer.slice());
-                            state = State.REQUEST_LINE;
-                            break loop;
+                        buffer.mark();
+                        if (contentLength != 0 && buffer.remaining() < contentLength) {
+                            throw new BufferUnderflowException();
                         }
+                        requestBuilder.body(buffer.slice());
+                        buffer.position(buffer.position() + contentLength);
+                        state = State.REQUEST_LINE;
+                        break loop;
                     }
                 }
             }
