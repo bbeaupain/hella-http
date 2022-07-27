@@ -14,8 +14,8 @@ public class RequestParserTest {
     @Test
     public void shouldParseSimpleRequestLine() {
         ByteBuffer buffer = ByteBufferUtil.wrapDirect("GET /test HTTP/1.1\r\n\r\n");
-        RequestDecoder parser = new RequestDecoder();
-        Request request = parser.decode(buffer);
+        RequestDecoder decoder = new RequestDecoder();
+        Request request = decoder.decode(buffer);
         Assertions.assertEquals("GET", request.getMethod());
         Assertions.assertEquals("HTTP/1.1", request.getProtocol());
         Assertions.assertEquals("/test", request.getPath());
@@ -24,8 +24,8 @@ public class RequestParserTest {
     @Test
     public void shouldParseHeaders() {
         ByteBuffer buffer = ByteBufferUtil.wrapDirect("GET /test HTTP/1.1\r\nContent-Length: 0\r\n\r\n");
-        RequestDecoder parser = new RequestDecoder();
-        Request request = parser.decode(buffer);
+        RequestDecoder decoder = new RequestDecoder();
+        Request request = decoder.decode(buffer);
         Assertions.assertEquals("GET", request.getMethod());
         Assertions.assertEquals("HTTP/1.1", request.getProtocol());
         Assertions.assertEquals("/test", request.getPath());
@@ -35,8 +35,8 @@ public class RequestParserTest {
     @Test
     public void shouldParseParameters() {
         ByteBuffer buffer = ByteBufferUtil.wrapDirect("GET /test?foo=bar HTTP/1.1\r\n\r\n");
-        RequestDecoder parser = new RequestDecoder();
-        Request request = parser.decode(buffer);
+        RequestDecoder decoder = new RequestDecoder();
+        Request request = decoder.decode(buffer);
         Assertions.assertEquals("GET", request.getMethod());
         Assertions.assertEquals("HTTP/1.1", request.getProtocol());
         Assertions.assertEquals("/test", request.getPath());
@@ -46,8 +46,8 @@ public class RequestParserTest {
     @Test
     public void shouldParseBody() {
         ByteBuffer buffer = ByteBufferUtil.wrapDirect("POST /test?foo=bar HTTP/1.1\r\nContent-Length: 12\r\n\r\nHello, world!");
-        RequestDecoder parser = new RequestDecoder();
-        Request request = parser.decode(buffer);
+        RequestDecoder decoder = new RequestDecoder();
+        Request request = decoder.decode(buffer);
         System.out.println(request);
         Assertions.assertEquals("POST", request.getMethod());
         Assertions.assertEquals("HTTP/1.1", request.getProtocol());
@@ -59,7 +59,7 @@ public class RequestParserTest {
     @Test
     public void shouldNotParseMalformedRequestLine() {
         ByteBuffer buffer = ByteBufferUtil.wrapDirect("GET HTTP/1.1");
-        RequestDecoder parser = new RequestDecoder();
-        Assertions.assertThrows(BufferUnderflowException.class, () -> parser.decode(buffer));
+        RequestDecoder decoder = new RequestDecoder();
+        Assertions.assertThrows(BufferUnderflowException.class, () -> decoder.decode(buffer));
     }
 }

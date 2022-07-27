@@ -20,21 +20,19 @@ public class RequestDecoder {
         Request.RequestBuilder requestBuilder = Request.builder();
         try {
             loop: while (buffer.hasRemaining()) {
+                buffer.mark();
                 switch (state) {
                     case REQUEST_LINE -> {
-                        buffer.mark();
                         decodeMethod(buffer, requestBuilder);
                         decodePath(buffer, requestBuilder);
                         decodeProtocol(buffer, requestBuilder);
                         state = State.HEADERS;
                     }
                     case HEADERS -> {
-                        buffer.mark();
                         decodeHeaders(buffer, requestBuilder);
                         state = State.BODY;
                     }
                     case BODY -> {
-                        buffer.mark();
                         if (contentLength != 0 && buffer.remaining() < contentLength) {
                             throw new BufferUnderflowException();
                         }
