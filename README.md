@@ -14,9 +14,7 @@ For both of these, the higher the version the better - free performance!
 
 Hella will be published to Maven central once the API has stabilized.
 
-## HTTP Server Example
-
-Here's a basic HTTP server from `sh.blake.niouring.examples.HttpHelloWorldServer`. There are a few other examples in the same package.
+## Hello World Example
 
 ```java
 public static void main(String[] args) {
