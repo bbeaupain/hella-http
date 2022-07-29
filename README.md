@@ -38,7 +38,7 @@ public static void main(String[] args) {
 
 ## Benchmarks
 
-The following benchmarks were conducted between two EC2 c5.2xlarge instances, which have 8 virtual CPUs and 16GB of RAM. The library used to conduct and measure the benchmarks was `wrk`.
+Hella scales exceptionally well with large amounts of clients. The following benchmarks were conducted between two EC2 c5.2xlarge instances, which have 8 virtual CPUs and 16GB of RAM. The library used to conduct and measure the benchmarks was `wrk`.
 
 ### Requests per Second
 
