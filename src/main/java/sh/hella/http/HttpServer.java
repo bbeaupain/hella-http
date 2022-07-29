@@ -20,7 +20,6 @@ import java.util.function.Function;
 public class HttpServer {
     private Options options = Options.builder().build();
     private final Function<Request, Response> handler;
-    private final int threads = Runtime.getRuntime().availableProcessors();
     private final ExecutorService pool = Executors.newFixedThreadPool(options.getThreads());
 
     public HttpServer start() {
@@ -45,7 +44,7 @@ public class HttpServer {
             socket.onWrite(ByteBuffer::compact);
             ring.queueRead(socket, inBuffer);
         });
-        for (int i = 0; i < threads; i++) {
+        for (int i = 0; i < options.getThreads(); i++) {
             pool.execute(new IoUring().queueAccept(serverSocket)::loop);
         }
         return this;
