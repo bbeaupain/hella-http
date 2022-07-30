@@ -42,23 +42,9 @@ Hella scales exceptionally well with large amounts of clients. The following ben
 
 ![Requests per second benchmark](https://github.com/bbeaupain/hella-http/blob/main/docs/requests.png?raw=true)
 
-|                    | 1     | 10    | 100    | 1000   | 10000  | 25000  |
-|--------------------|-------|-------|--------|--------|--------|--------|
-| hella              | 12034 | 98312 | 411585 | 614449 | 628288 | 591419 |
-| microhttp          | 11886 | 98925 | 286428 | 588984 | 372675 | 323757 |
-| netty              | 11303 | 94751 | 364214 | 410423 | 319265 | 279239 |
-| rapidoid-http-fast | 11574 | 97124 | 408889 | 531682 | 332036 | 236667 |
-
 ### Latency (microseconds)
 
 ![Requests per second benchmark](https://github.com/bbeaupain/hella-http/blob/main/docs/latency.png?raw=true)
-
-|                    | 1   | 10  | 100 | 1000 | 10000 | 25000  |
-|--------------------|-----|-----|-----|------|-------|--------|
-| hella              | 83  | 100 | 231 | 1970 | 2690  | 3240   |
-| microhttp          | 84  | 101 | 347 | 3002 | 27000 | 77250  |
-| netty              | 108 | 133 | 423 | 5180 | 30950 | 84550  |
-| rapidoid-http-fast | 93  | 138 | 291 | 2240 | 33280 | 105280 |
 
 ## License
 
