@@ -60,17 +60,6 @@ Hella scales exceptionally well with large amounts of clients. The following ben
 | netty              | 108 | 133 | 423 | 5180 | 30950 | 84550  |
 | rapidoid-http-fast | 93  | 138 | 291 | 2240 | 33280 | 105280 |
 
-### Memory Usage (megabytes)
-
-![Requests per second benchmark](https://github.com/bbeaupain/hella-http/blob/main/docs/memory.png?raw=true)
-
-|                    | 1   | 10  | 100 | 1000 | 10000 | 25000  |
-|--------------------|-----|-----|-----|------|-------|--------|
-| hella              | 201 | 220 | 220 | 408  | 1400  | 3100   |
-| microhttp          | 220 | 230 | 236 | 305  | 555   | 1200   |
-| netty              | 238 | 295 | 298 | 321  | 463   | 800    |
-| rapidoid-http-fast | 150 | 268 | 310 | 715  | 4600  | 10800  |
-
 ## License
 
 MIT. Have fun and make cool things!
