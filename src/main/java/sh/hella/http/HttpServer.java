@@ -45,7 +45,7 @@ public class HttpServer {
             ring.queueRead(socket, inBuffer);
         });
         for (int i = 0; i < options.getThreads(); i++) {
-            pool.execute(new IoUring().queueAccept(serverSocket)::loop);
+            pool.execute(new IoUring(4096).queueAccept(serverSocket)::loop);
         }
         return this;
     }
