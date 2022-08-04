@@ -3,8 +3,6 @@ package sh.hella.http;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.Duration;
-
 @Data
 @Builder
 public class Options {

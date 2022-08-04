@@ -8,7 +8,6 @@ import sh.blake.niouring.IoUringServerSocket;
 import sh.hella.http.codec.RequestDecoder;
 import sh.hella.http.codec.ResponseEncoder;
 
-import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,7 +23,6 @@ public class HttpServer {
 
     public HttpServer start() {
         var serverSocket = new IoUringServerSocket(options.getHost(), options.getPort());
-        var responseEncoder = new ResponseEncoder();
         serverSocket.onAccept((ring, socket) -> {
             ring.queueAccept(serverSocket);
             var inBuffer = ByteBuffer.allocateDirect(options.getRequestBufferSize());
@@ -32,12 +30,12 @@ public class HttpServer {
             var requestDecoder = new RequestDecoder();
             socket.onRead(received -> {
                 received.flip();
-                try {
-                    var request = requestDecoder.decode(received);
+                var request = requestDecoder.decode(received);
+                if (request != null) {
                     var response = handler.apply(request);
-                    responseEncoder.encode(response, outBuffer);
+                    ResponseEncoder.encode(response, outBuffer);
                     ring.queueWrite(socket, outBuffer);
-                } catch (BufferUnderflowException ignored) {}
+                }
                 received.compact();
                 ring.queueRead(socket, received);
             });

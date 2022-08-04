@@ -12,8 +12,9 @@ public class ResponseEncoder {
     private static final Map<String, byte[]> ENCODED_HEADER_KEYS = new HashMap<>();
     private static final byte[] HTTP_VERSION = "HTTP/1.1 ".getBytes(StandardCharsets.UTF_8);
     private static final byte[] CARRIAGE_RETURN = "\r\n".getBytes(StandardCharsets.UTF_8);
+    private static final byte[] SERVER_HEADER = "Server: hella-http\r\n".getBytes(StandardCharsets.UTF_8);
 
-    public void encode(Response response, ByteBuffer buffer) {
+    public static void encode(Response response, ByteBuffer buffer) {
         if (!ENCODED_STATUSES.containsKey(response.getStatus())) {
             byte[] statusBytes = (response.getStatus() + "\r\n").getBytes(StandardCharsets.UTF_8);
             ENCODED_STATUSES.put(response.getStatus(), statusBytes);
@@ -26,6 +27,7 @@ public class ResponseEncoder {
 
         // Encode any response headers
         if (!response.getHeaders().isEmpty()) {
+            buffer.put(SERVER_HEADER);
             for (Map.Entry<String, String> entry : response.getHeaders().entrySet()) {
                 if (!ENCODED_HEADER_KEYS.containsKey(entry.getKey())) {
                     byte[] encodedKey = (entry.getKey() + ": ").getBytes(StandardCharsets.UTF_8);

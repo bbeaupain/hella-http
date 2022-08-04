@@ -6,6 +6,7 @@ import lombok.Data;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 @Data
 @Builder
@@ -16,4 +17,5 @@ public class Request {
     private final String protocol;
     private final Map<String, String> headers;
     private final ByteBuffer body;
+    private Consumer<ByteBuffer> chunkHandler;
 }
