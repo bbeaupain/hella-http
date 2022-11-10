@@ -95,7 +95,7 @@ public class RequestDecoder {
             case 'P' -> switch (buffer.get(buffer.position() + 1)) {
                 case 'O' -> "POST";
                 case 'U' -> "PUT";
-                case 'P' -> "PATCH";
+                case 'A' -> "PATCH";
                 default -> throw new RuntimeException("Unable to decode method");
             };
             case 'D' -> "DELETE";

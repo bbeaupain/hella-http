@@ -11,4 +11,5 @@ public class Options {
     @Builder.Default private final int requestBufferSize = 64 * 1024;
     @Builder.Default private final int responseBufferSize = 64 * 1024;
     @Builder.Default private final int threads = Runtime.getRuntime().availableProcessors();
+    @Builder.Default private final int ttl = 60000;
 }
