@@ -1,6 +1,6 @@
 # hella-http
 
-`hella-http` is a hella fast HTTP library for Java that uses [nio_uring](https://github.com/bbeaupain/nio_uring) for I/O. Although it is currently only around 300 lines of code, it is one of the most scalable HTTP servers available for Java today.
+`hella-http` is a hella fast HTTP library for Java that uses [nio_uring](https://github.com/bbeaupain/nio_uring) for I/O. It has a very small codebase and is one of the most scalable HTTP servers available for Java today.
 
 Feedback, suggestions, and contributions are most welcome!
 
