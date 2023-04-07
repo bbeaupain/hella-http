@@ -43,12 +43,15 @@ Hella scales exceptionally well with large amounts of clients. The following ben
 ![Requests per second benchmark](https://github.com/bbeaupain/hella-http/blob/main/docs/requests.png?raw=true)
 
 X axis: number of clients
+
 Y axis: requests per second
 
 ### Latency (microseconds)
 
 ![Requests per second benchmark](https://github.com/bbeaupain/hella-http/blob/main/docs/latency.png?raw=true)
+
 X axis: number of clients
+
 Y axis: latency in microseconds
 
 ## License
