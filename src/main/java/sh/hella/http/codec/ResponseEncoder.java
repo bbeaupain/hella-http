@@ -4,12 +4,12 @@ import sh.hella.http.Response;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ResponseEncoder {
-    private static final Map<Integer, byte[]> ENCODED_STATUSES = new HashMap<>();
-    private static final Map<String, byte[]> ENCODED_HEADER_KEYS = new HashMap<>();
+    private static final Map<Integer, byte[]> ENCODED_STATUSES = new ConcurrentHashMap<>();
+    private static final Map<String, byte[]> ENCODED_HEADER_KEYS = new ConcurrentHashMap<>();
     private static final byte[] HTTP_VERSION = "HTTP/1.1 ".getBytes(StandardCharsets.UTF_8);
     private static final byte[] CARRIAGE_RETURN = "\r\n".getBytes(StandardCharsets.UTF_8);
     private static final byte[] SERVER_HEADER = "Server: hella-http\r\n".getBytes(StandardCharsets.UTF_8);
