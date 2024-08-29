@@ -1,5 +1,9 @@
 # hella-http
 
+Has been renamed and moved to [Hipshot](https://github.com/hipshot-java/hipshot/).
+
+---------
+
 `hella-http` is a hella fast HTTP library for Java that uses [nio_uring](https://github.com/bbeaupain/nio_uring) for I/O. It has a very small codebase and is one of the most scalable HTTP servers available for Java today.
 
 Feedback, suggestions, and contributions are most welcome!
